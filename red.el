@@ -42,12 +42,12 @@
   "\\<\\(-?[1-9][0-9]*\\|0\\)x\\(-?[1-9][0-9]*\\|0\\)\\>"
   "Definition of Red pairs.")
 
-; percentages are simple floats with a % sigil
+;; percentages are simple floats with a % sigil
 (defconst red-percent-regex
   "\\<-?[1-9][0-9]*\\(?:\\.[0-9]+\\)?%\\>"
   "Definition of Red percentage numbers.")
 
-; tuples are 3-12 integers separated by periods
+;; tuples are 3-12 integers separated by periods
 (defconst red-tuple-regex
   "\\<\\(?:0\\|[1-9][0-9]*\\)\\(?:\\.\\(?:0\\|[1-9][0-9]*\\)\\)\\{2,12\\}\\>"
   "Definition of Red tuples.")
@@ -64,9 +64,9 @@
 
 (defconst red-words-regex
   (concat "\\<"
-	  (regexp-opt-group
-	   (split-string
-	    "
+          (regexp-opt-group
+           (split-string
+            "
 NaN? a-an about absolute acos action? add ail alias all and and~ any
 any-block? any-function? any-object? any-path? any-string? any-word?
 append arccosine arcsine arctangent arctangent2 as as-pair asin ask at
@@ -94,8 +94,8 @@ struct! subtract swap switch tail tail? take tan tangent third throw
 to to-hex trim true try tuple? type? typeset? union unique unless
 unset? axis until uppercase url? value? values-of variadic vector?
 what while word? words-of xor xor~ zero?")
-	   t t)
-	  "\\>")
+           t t)
+          "\\>")
   "Words which are defined by default in the Red programming language.")
 
 (defconst red-font-lock-keywords
@@ -108,7 +108,7 @@ what while word? words-of xor xor~ zero?")
     (,red-setter-regex . font-lock-variable-name-face))
   "Font lock table for the Red programming language")
 
-;;; Syntax table.
+;;; Syntax table.
 (defvar red-syntax-table
   (let ((syn-table (make-syntax-table)))
     ;; Lisp style comments
@@ -122,7 +122,7 @@ what while word? words-of xor xor~ zero?")
     )
   "Syntax table for the Red language.")
 
-;;; Standard intelligent comments.
+;;; Standard intelligent comments.
 (defun red-comment-dwim (arg)
   "`Do What I Mean' commenting for Red. Based on the `comment-dwim' function."
   (interactive "*P")
@@ -130,7 +130,7 @@ what while word? words-of xor xor~ zero?")
   (let ((comment-start ";") (comment-end ""))
     (comment-dwim arg)))
 
-;;; Line indentation.
+;;; Line indentation.
 (defvar red-indentation-amount 3
   "How many cells of indentation are used in Red source code.")
 
@@ -138,40 +138,40 @@ what while word? words-of xor xor~ zero?")
   "Figures out the proper indentation for the current line."
   (save-excursion
     (if (bobp)
-	0
+        0
       (let ((indentation 0)
-	    (closers "[\])}]")
-	    (openers "[\[({]"))
-	;; dedent if closers are present
-	(let* ((bol (progn (beginning-of-line)
-			   (point)))
-	       (eol (progn (end-of-line)
-			   (point)))
-	       (open (how-many openers bol eol))
-	       (close (how-many closers bol eol))
-	       (diff (- open close)))
-	  (if (< diff 0)
-	      (setq indentation (- 0 red-indentation-amount))))
-	;; add previous line's indentation
-	(previous-line)
-	(setq indentation (+ indentation (current-indentation)))
-	;; indent if openers are present
-	(let* ((bol (progn (beginning-of-line)
-			   (point)))
-	       (eol (progn (end-of-line)
-			   (point)))
-	       (open (how-many openers bol eol))
-	       (close (how-many closers bol eol))
-	       (diff (- open close)))
-	  (if (> diff 0)
-	      (setq indentation (+ indentation red-indentation-amount))))
-	(max 0 indentation)))))
+            (closers "[\])}]")
+            (openers "[\[({]"))
+        ;; dedent if closers are present
+        (let* ((bol (progn (beginning-of-line)
+                           (point)))
+               (eol (progn (end-of-line)
+                           (point)))
+               (open (how-many openers bol eol))
+               (close (how-many closers bol eol))
+               (diff (- open close)))
+          (if (< diff 0)
+              (setq indentation (- 0 red-indentation-amount))))
+        ;; add previous line's indentation
+        (previous-line)
+        (setq indentation (+ indentation (current-indentation)))
+        ;; indent if openers are present
+        (let* ((bol (progn (beginning-of-line)
+                           (point)))
+               (eol (progn (end-of-line)
+                           (point)))
+               (open (how-many openers bol eol))
+               (close (how-many closers bol eol))
+               (diff (- open close)))
+          (if (> diff 0)
+              (setq indentation (+ indentation red-indentation-amount))))
+        (max 0 indentation)))))
 
 (defun red-indent-line ()
   "Indents the current line using Red's indentation rules."
   (interactive "*")
   (let* ((a (point))
-	 (b (progn (back-to-indentation) (point))))
+         (b (progn (back-to-indentation) (point))))
     (indent-line-to (red-get-indentation-for-line))
     (back-to-indentation)
     (forward-char (- a b))))
@@ -182,9 +182,9 @@ what while word? words-of xor xor~ zero?")
   (self-insert-command 1)
   (red-indent-line))
 
-;;; Mode definition.
+;;; Mode definition.
 (define-derived-mode red-mode prog-mode
-  "Red"
+                     "Red"
   "Major mode for editing source code in the Red or Red/System programming languages."
   :syntax-table red-syntax-table
 
