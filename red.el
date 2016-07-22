@@ -240,3 +240,5 @@ what while word? words-of xor xor~ zero?")
 
 ;; Allow auto-loading this plugin.
 (provide 'red)
+
+;;; red.el ends here
