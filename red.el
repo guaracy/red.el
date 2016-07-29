@@ -185,6 +185,18 @@ what while word? words-of xor xor~ zero?")
   (self-insert-command 1)
   (red-indent-line))
 
+;; to highlight bracketed strings
+;; TODO red strings allow for nested {}. We should take that in regard.
+(defun propertize-bracket-string (start fin)
+  (save-excursion
+    (goto-char start)
+    (while (< (point) fin)
+      (let ((beg (search-forward "{" fin 'noerror))
+            (end (or (re-search-forward "[^\\]}" fin 'noerror) (point))))
+        (when beg
+          (put-text-property (1- beg) beg 'syntax-table (string-to-syntax "|"))
+          (put-text-property (1- end) end 'syntax-table (string-to-syntax "|")))))))
+
 ;;; Mode definition.
 (define-derived-mode red-mode prog-mode
   "Red"
@@ -204,7 +216,12 @@ what while word? words-of xor xor~ zero?")
 
   ;; map our indenter
   (make-local-variable indent-line-function)
-  (setq indent-line-function 'red-indent-line))
+  (setq indent-line-function 'red-indent-line)
+
+  ;; make {} strings behave
+  (if (boundp 'syntax-propertize-function)
+      (setq-local syntax-propertize-function 'propertize-bracket-string))
+  )
 
 ;;; Auto-insert
 
