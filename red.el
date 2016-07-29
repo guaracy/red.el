@@ -192,7 +192,7 @@ what while word? words-of xor xor~ zero?")
     (goto-char start)
     (while (< (point) fin)
       (let ((beg (search-forward "{" fin 'noerror))
-            (end (or (re-search-forward "[^\\]}" fin 'noerror) (point))))
+            (end (or (re-search-forward "[^^]}" fin 'noerror) (point))))
         (when beg
           (put-text-property (1- beg) beg 'syntax-table (string-to-syntax "|"))
           (put-text-property (1- end) end 'syntax-table (string-to-syntax "|")))))))
