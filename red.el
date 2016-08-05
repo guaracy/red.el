@@ -23,6 +23,7 @@
 ;;; Commentary:
 
 ;;; Code:
+;; (require 'dash)
 
 (defconst red-integer-regex
   "\\<\\(-?[1-9][0-9]*\\|0\\)\\>"
@@ -185,17 +186,26 @@ what while word? words-of xor xor~ zero?")
   (self-insert-command 1)
   (red-indent-line))
 
-;; to highlight bracketed strings
-;; TODO red strings allow for nested {}. We should take that in regard.
+(defun comment-or-string-p (&optional pos)
+  "Returns true if the point is in a comment or string."
+  (save-excursion (let ((parse-result (syntax-ppss pos)))
+                    (or (elt parse-result 3) (elt parse-result 4)))))
+
 (defun propertize-bracket-string (start fin)
   (save-excursion
     (goto-char start)
     (while (< (point) fin)
-      (let ((beg (search-forward "{" fin 'noerror))
-            (end (or (re-search-forward "[^^]}" fin 'noerror) (point))))
-        (when beg
-          (put-text-property (1- beg) beg 'syntax-table (string-to-syntax "|"))
-          (put-text-property (1- end) end 'syntax-table (string-to-syntax "|")))))))
+      (let ((beg (search-forward "{" fin 'noerror)))
+        (when (and beg (not (comment-or-string-p beg)))
+          (let* ((end (or (re-search-forward "[^^]}" fin 'noerror) (point)))
+                 (last-match beg)
+                 (openers (how-many "{" last-match end)))
+            (while (> openers 0)
+              (setq last-match end
+                    end (or (re-search-forward "[^^]}" fin 'noerror) (point))
+                    openers (1- (how-many "{" (1+ last-match) end))))
+            (put-text-property (1- beg) beg 'syntax-table (string-to-syntax "|"))
+            (put-text-property (1- end) end 'syntax-table (string-to-syntax "|"))))))))
 
 ;;; Mode definition.
 (define-derived-mode red-mode prog-mode
