@@ -55,46 +55,31 @@
 
 ;; setters are words ending with :
 (defconst red-setter-regex
-  "\\_<\\(\\s_\\|\\w\\)+: "
+  "\\(\\w\\|\\s_\\)+:"
   "Definition of Red setters.")
+
+;; getters are words starting with :
+(defconst red-getter-regex
+  ":\\(\\w\\|\\s_\\)+"
+  "Definition of Red getters.")
+
+;; datatypes are t and words ending with !
+(defconst red-datatype-regex
+  "\\(\\w\\|\\s_\\)+!\\|\\<t\\>"
+  "Definition of Red datatypes.")
 
 ;;; Special parts which require text highlights
 
 ;; symbols
 ;; "% * ** + - / // < << <= <> = == =? > >= >> >>> ? ?? NaN? a-an"
 
+;; words
 (defconst red-words-regex
   (concat "\\<"
           (regexp-opt-group
            (split-string
-            "
-NaN? a-an about absolute acos action? add ail alias all and and~ any
-any-block? any-function? any-object? any-path? any-string? any-word?
-append arccosine arcsine arctangent arctangent2 as as-pair asin ask at
-atan atan2 attempt back bind bitset? block? body-of break byte!
-c-string! case catch cause-error cdecl char? charset clear comment
-complement complement? complete-from-path compose cond construct
-context continue copy cos cosine datatype? declare
-default-input-completer dehex difference divide do does e either
-empty? equal? error? eval-set-path even? exclude exit exp extend false
-fifth file? find first float! float32! float? forall foreach forever
-form fourth func function function? get get-path? get-word?
-greater-or-equal? greater? halt has hash? head head? help if in index?
-input insert integer! integer? intersect issue? keys-of last last-lf?
-length? lesser-or-equal? lesser? lit-path? lit-word? load local log-10
-log-2 log-e logic! logic? loop lowercase make map? max min modify
-modulo mold multiply native? negate negative? next none?  not
-not-equal? object object? odd? op? or or~ pad pair? paren? parse
-parse-trace path? percent? pick pointer! poke positive? power prin
-print probe put quit quit-return quote random read-input reduce
-refinement? reflect remainder remove repeat replace return reverse
-round routine? same? second select series? set set-buffer-history
-set-path? set-word? shift shift-left shift-logical shift-right sin
-sine skip sort source spec-of square-root stats strict-equal? string?
-struct! subtract swap switch tail tail? take tan tangent third throw
-to to-hex trim true try tuple? type? typeset? union unique unless
-unset? axis until uppercase url? value? values-of variadic vector?
-what while word? words-of xor xor~ zero?")
+            (regexp-quote
+             "% * ** + - / // < << <= <> = == =? > >= >> >>> ? ?? a-an about absolute acos action? add all also alter and and~ any any-block! any-block? any-function! any-function? any-list! any-list? any-object! any-object? any-path! any-path? any-string! any-string? any-type! any-word! any-word? append aqua arccosine arcsine arctangent arctangent2 as-color as-ipv4 as-pair as-rgba asin ask at atan atan2 attempt back beige binary? bind bitset? black block? blue body-of break brick brown browse case catch cause-error cd change change-dir char? charset checksum clean-path clear clear-reactions coal coffee collect comma comment complement complement? compose construct context context? continue copy cos cosine cr create-dir crimson crlf cyan datatype? dbl-quote debase deep-reactor! default! default-input-completer dehex difference dir dir? dirize divide do do-file does dot dump-reactions either empty? enbase equal? error? escape eval-set-path even? exclude exists? exit exp extend extract extract-boot-args false fifth file? find first flip-exe-flag float? forall foreach forest forever form fourth func function function? get get-current-dir get-env get-path? get-word? glass gold gray greater-or-equal? greater? green halt has hash? head head? help if image? immediate! inindex? input insert integer? internal! intersect is issue? ivory keys-of khaki last last-lf? leaf length? lesser-or-equal? lesser? lf linen list-dir list-env lit-path? lit-word? ll load log-10 log-2 log-e logic? loop lowercase ls magenta make make-dir map? maroon max min mint modify modulo mold move multiply NaN? native? navy negate negative? new-line new-line? newline next no none none? normalize-dir not not-equal? now null number! number? object object? odd? off offset? oldrab olive on on-parse-event op? or orange or~ overlap? p-indent pad pair? papaya paren? parse parse-trace path? percent? pewter pi pick pink poke positive? power prin print probe purple put pwd q quit quit-return quote random react react? reactor! read reblue Rebol rebolor Red red-complete-file red-complete-path reduce refinement? reflect remainder remove remove-each repeat repend replace request-dir request-file return reverse round routine routine? same? save scalar! second select series! series? set set-current-dir set-env set-path? set-quiet set-word? shift shift-left shift-logical shift-right sienna silver sin sine skip sky slash snow sort source sp space spec-of split split-path square-root stats strict-equal? string? subtract suffix? swap switch system tab tail tail? take tan tangent tanned teal third throw time? to to-hex to-image to-local-file to-red-file transparent trim true try tuple? type? typeset? union unique unless unset unset? until uppercase url? value value? values-of vector? violet wait water what what-dir wheat while white within? word? words-of write xor xor~ yello yellow yes zero? _read-input _set-buffer-history"))
            t t)
           "\\>")
   "Words which are defined by default in the Red programming language.")
@@ -106,7 +91,9 @@ what while word? words-of xor xor~ zero?")
     (,red-hexadecimal-regex . font-lock-constant-face)
     (,red-integer-regex . font-lock-constant-face)
     (,red-words-regex . font-lock-function-name-face)
-    (,red-setter-regex . font-lock-variable-name-face))
+    (,red-setter-regex . font-lock-variable-name-face)
+    (,red-getter-regex . font-lock-variable-name-face)
+    (,red-datatype-regex . font-lock-type-face))
   "Font lock table for the Red programming language")
 
 ;;; Syntax table.
