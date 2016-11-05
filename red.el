@@ -89,6 +89,7 @@
     (,red-percent-regex . font-lock-constant-face)
     (,red-float-regex . font-lock-constant-face)
     (,red-hexadecimal-regex . font-lock-constant-face)
+    (,red-pair-regex . font-lock-constant-face)
     (,red-integer-regex . font-lock-constant-face)
     (,red-words-regex . font-lock-function-name-face)
     (,red-setter-regex . font-lock-variable-name-face)
